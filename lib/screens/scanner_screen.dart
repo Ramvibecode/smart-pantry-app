@@ -124,14 +124,21 @@ class _ScannerScreenState extends State<ScannerScreen> {
               ),
             ),
           ),
-          const Positioned(
+          Positioned(
             top: 20,
             left: 0,
             right: 0,
             child: Center(
-              child: Text(
-                "Center barcode or receipt inside the box",
-                style: TextStyle(color: Colors.white, backgroundColor: Colors.black45, padding: EdgeInsets.all(8)),
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.black45,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Text(
+                  "Center barcode or receipt inside the box",
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ),
           )
