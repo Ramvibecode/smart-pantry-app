@@ -1,0 +1,65 @@
+name: Build APK
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+env:
+  # This fixes the Node 20/24 issue
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Prepare Files
+        run: |
+          # 1. If lib.zip exists, unzip it to a temp folder
+          if [ -f "lib.zip" ]; then
+            unzip -o lib.zip -d lib_temp
+            echo "Unzipped lib.zip"
+          fi
+
+          # 2. If pubspec.yaml is missing, create a fresh project
+          if [ ! -f "pubspec.yaml" ]; then
+            flutter create --project-name smart_pantry --org com.smartpantry .
+          fi
+          
+          # 3. If we have unzipped files, replace the default lib folder
+          if [ -d "lib_temp" ]; then
+            rm -rf lib
+            mv lib_temp/lib lib || mv lib_temp lib
+            echo "Replaced lib folder with your code"
+          fi
+
+          # 4. Set Min SDK to 21 (Required for AI)
+          if [ -f "android/app/build.gradle" ]; then
+            sed -i 's/minSdkVersion flutter.minSdkVersion/minSdkVersion 21/g' android/app/build.gradle
+          fi
+
+      - name: Install Dependencies
+        run: flutter pub get
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Upload Result
+        uses: actions/upload-artifact@v4
+        with:
+          name: smart-pantry-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
