@@ -2,10 +2,12 @@ name: Build APK
 
 on:
   push:
-    branches:
-      - main
-      - master
+    branches: [ "main", "master" ]
   workflow_dispatch:
+
+env:
+  # This fixes the Node20 deprecation you found!
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   build:
@@ -25,18 +27,23 @@ jobs:
         with:
           channel: 'stable'
 
-      - name: Initialize Android Folder
+      - name: Fix Project & SDK
         run: |
-          # Create android folder if missing
-          if [ ! -d "android" ]; then
-            flutter create --project-name smart_pantry --org com.example .
+          # 1. If files are missing, create a fresh project structure
+          if [ ! -f "pubspec.yaml" ]; then
+            flutter create --project-name smart_pantry --org com.smartpantry .
+          fi
+          
+          # 2. Fix the SDK version (Required for the Scanning AI)
+          if [ -f "android/app/build.gradle" ]; then
+            sed -i 's/minSdkVersion flutter.minSdkVersion/minSdkVersion 21/g' android/app/build.gradle
           fi
 
       - name: Install Dependencies
         run: flutter pub get
 
       - name: Build APK
-        run: flutter build apk --release --no-pub
+        run: flutter build apk --release
 
       - name: Upload Result
         uses: actions/upload-artifact@v4
