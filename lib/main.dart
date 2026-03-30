@@ -59,7 +59,7 @@ class _MainNavigationHubState extends State<MainNavigationHub> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.transparent,
-        title: const Text('SmartPantry', style: TextStyle(fontWeight: FontWeight.black, letterSpacing: -1)),
+        title: const Text('SmartPantry', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: -1)),
         actions: [
           IconButton(
             icon: const Icon(Icons.help_outline),
@@ -137,7 +137,7 @@ class DashboardScreen extends StatelessWidget {
         children: [
           const Text('Welcome Back, Krish!', style: TextStyle(color: Colors.white70, fontSize: 16)),
           const SizedBox(height: 6),
-          const Text('\$14.20 Saved', style: TextStyle(color: Colors.white, fontSize: 36, fontWeight: FontWeight.black, letterSpacing: -1)),
+          const Text('\$14.20 Saved', style: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold, letterSpacing: -1)),
           const Text('from price audits this month', style: TextStyle(color: Colors.white60, fontSize: 14)),
           const SizedBox(height: 24),
           Container(

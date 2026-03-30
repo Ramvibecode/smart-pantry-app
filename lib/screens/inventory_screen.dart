@@ -72,7 +72,7 @@ class InventoryScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("${item.quantity} ${item.unit}", style: const TextStyle(fontWeight: FontWeight.black, fontSize: 18, color: Colors.teal)),
+                          Text("${item.quantity} ${item.unit}", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.teal)),
                           Row(
                             children: [
                               _actionBtn(Icons.remove, () => pantry.deductItem(item.product.barcode, 1)),

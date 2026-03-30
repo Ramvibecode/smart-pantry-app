@@ -75,14 +75,28 @@ class _ScannerScreenState extends State<ScannerScreen> {
     }
     final bytes = allBytes.done().buffer.asUint8List();
 
-    final metadata = InputImageMetadata(
+    final imageRotation = InputImageRotationValue.fromRawValue(90) ?? InputImageRotation.rotation90deg;
+
+    final inputImageFormat = InputImageFormatValue.fromRawValue(image.format.raw) ?? InputImageFormat.yuv420;
+
+    final planeData = image.planes.map(
+      (Plane plane) {
+        return InputImagePlaneMetadata(
+          bytesPerRow: plane.bytesPerRow,
+          height: plane.height,
+          width: plane.width,
+        );
+      },
+    ).toList();
+
+    final inputImageData = InputImageData(
       size: Size(image.width.toDouble(), image.height.toDouble()),
-      rotation: InputImageRotation.rotation90deg,
-      format: InputImageFormatValue.fromRawValue(image.format.raw) ?? InputImageFormat.yuv420,
-      bytesPerRow: image.planes[0].bytesPerRow,
+      imageRotation: imageRotation,
+      inputImageFormat: inputImageFormat,
+      planeData: planeData,
     );
 
-    return InputImage.fromBytes(bytes: bytes, metadata: metadata);
+    return InputImage.fromBytes(bytes: bytes, inputImageData: inputImageData);
   }
 
   void _handleBarcodeDetected(String barcode) {
