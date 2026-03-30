@@ -14,7 +14,7 @@ Since I am an AI and cannot send a large binary file directly through chat, I ha
     2. Upload all the files from this project (including the `.github` folder).
     3. Go to the **"Actions"** tab in your GitHub repository.
     4. You will see a workflow named **"Build Android APK"** running.
-    5. Once it finishes (about 2 minutes), click on the run and download the **`app-release.apk`** from the **Artifacts** section at the bottom.
+    5. Once it finishes (about 2 minutes), click on the run and download the **`app-release.apk`** from the **"Artifacts"** section at the bottom.
     6. Transfer it to your phone and install!
 
 ## 3. Website & Marketing Review (Web)

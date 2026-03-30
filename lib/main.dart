@@ -13,7 +13,7 @@ class SmartPantryApp extends StatelessWidget {
     return MaterialApp(
       title: 'SmartPantry',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.emerald),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
         useMaterial3: true,
       ),
       home: const DashboardScreen(),
@@ -36,7 +36,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('SmartPantry', style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.emerald.shade50,
+        backgroundColor: Colors.teal.shade50,
       ),
       body: _buildBody(),
       bottomNavigationBar: BottomNavigationBar(
@@ -52,7 +52,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         onPressed: () {}, // Action for scanning
         icon: const Icon(Icons.qr_code_scanner),
         label: const Text('Scan Item'),
-        backgroundColor: Colors.emerald,
+        backgroundColor: Colors.teal,
         foregroundColor: Colors.white,
       ),
     );
@@ -97,7 +97,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Expanded(
           flex: 1,
           child: Container(
-            color: Colors.emerald.shade50,
+            color: Colors.teal.shade50,
             padding: EdgeInsets.all(16),
             child: Column(
               children: [
@@ -116,7 +116,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [Colors.emerald.shade600, Colors.emerald.shade400]),
+        gradient: LinearGradient(colors: [Colors.teal.shade600, Colors.teal.shade400]),
         borderRadius: BorderRadius.circular(16),
       ),
       child: const Column(

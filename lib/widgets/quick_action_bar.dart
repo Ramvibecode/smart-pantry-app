@@ -26,7 +26,7 @@ class QuickActionBar extends StatelessWidget {
               ),
               Text(
                 'Edit',
-                style: TextStyle(color: Colors.emerald, fontWeight: FontWeight.bold),
+                style: TextStyle(color: Colors.teal, fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -48,7 +48,7 @@ class QuickActionBar extends StatelessWidget {
                       SnackBar(
                         content: Text('Deducted 1 unit of ${item['name']}!'),
                         duration: const Duration(seconds: 1),
-                        backgroundColor: Colors.emerald,
+                        backgroundColor: Colors.teal,
                       ),
                     );
                   },

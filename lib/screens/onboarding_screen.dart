@@ -16,7 +16,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       title: "Set Your Region",
       description: "We compare prices from local apps like Blinkit and Zepto (India) or Amazon and Walmart (Global).",
       icon: Icons.location_on,
-      color: Colors.emerald,
+      color: Colors.teal,
     ),
     OnboardingPageData(
       title: "The 'Guardian' Scan",
@@ -63,7 +63,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       height: 8,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: _currentIndex == index ? Colors.emerald : Colors.grey.shade300,
+                        color: _currentIndex == index ? Colors.teal : Colors.grey.shade300,
                       ),
                     ),
                   ),
@@ -76,7 +76,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       Navigator.of(context).pop(); // Get Started
                     }
                   },
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.emerald, foregroundColor: Colors.white),
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.teal, foregroundColor: Colors.white),
                   child: Text(_currentIndex == _pages.length - 1 ? "Get Started" : "Next"),
                 ),
               ],
