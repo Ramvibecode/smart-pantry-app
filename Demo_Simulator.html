@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartPantry - Interactive Demo Simulator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .phone-frame {
+            width: 375px;
+            height: 700px;
+            border: 12px solid #1f2937;
+            border-radius: 36px;
+            overflow: hidden;
+            position: relative;
+            background: #f9fafb;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        .notch {
+            width: 150px;
+            height: 25px;
+            background: #1f2937;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            z-index: 50;
+        }
+        .screen-content {
+            height: 100%;
+            overflow-y: auto;
+            padding-bottom: 80px;
+        }
+        .animate-pop {
+            animation: pop 0.3s ease-out;
+        }
+        @keyframes pop {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 flex items-center justify-center min-h-screen p-4 font-sans">
+
+    <div class="flex flex-col lg:flex-row gap-12 items-center max-w-6xl w-full">
+        
+        <!-- Instruction Section -->
+        <div class="flex-1 space-y-6">
+            <h1 class="text-4xl font-bold text-slate-800">SmartPantry <span class="text-emerald-600">Simulator</span></h1>
+            <p class="text-lg text-slate-600">Welcome! I am the TL of the Dev Team. Since you asked where to test the app, I built this **interactive web prototype** so you can see the logic in action right now.</p>
+            
+            <div class="space-y-4">
+                <div class="flex items-start gap-4 p-4 bg-white rounded-xl shadow-sm border-l-4 border-emerald-500">
+                    <div class="bg-emerald-100 p-2 rounded-lg text-emerald-600"><i class="fa-solid fa-shield-halved"></i></div>
+                    <div>
+                        <h3 class="font-bold">Test the "Guardian" Mode</h3>
+                        <p class="text-sm text-slate-500">Click the <span class="font-semibold">Scan</span> button. If you scan "Milk", the app alerts you that you already have it at home.</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-4 p-4 bg-white rounded-xl shadow-sm border-l-4 border-blue-500">
+                    <div class="bg-blue-100 p-2 rounded-lg text-blue-600"><i class="fa-solid fa-capsules"></i></div>
+                    <div>
+                        <h3 class="font-bold">Test Medicine Tracking</h3>
+                        <p class="text-sm text-slate-500">Look at the Pharmacy section. Notice how it counts down pills automatically and generates a refill alert.</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-4 p-4 bg-white rounded-xl shadow-sm border-l-4 border-orange-500">
+                    <div class="bg-orange-100 p-2 rounded-lg text-orange-600"><i class="fa-solid fa-earth-americas"></i></div>
+                    <div>
+                        <h3 class="font-bold">Global Price Comparison</h3>
+                        <p class="text-sm text-slate-500">Switch between <span class="font-semibold">India</span> and <span class="font-semibold">Global</span> to see how we compare Blinkit vs Amazon prices.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="text-slate-500 italic text-sm">*This is a functional simulation. The real app is being built in Flutter for Android.*</p>
+        </div>
+
+        <!-- Phone Simulator -->
+        <div class="phone-frame">
+            <div class="notch"></div>
+            
+            <div id="app-screen" class="screen-content bg-white">
+                
+                <!-- Status Bar -->
+                <div class="px-6 pt-8 pb-2 flex justify-between items-center text-xs font-bold text-slate-400">
+                    <span>9:41</span>
+                    <div class="flex gap-1 items-center">
+                        <i class="fa-solid fa-signal"></i>
+                        <i class="fa-solid fa-wifi"></i>
+                        <i class="fa-solid fa-battery-full text-emerald-500"></i>
+                    </div>
+                </div>
+
+                <!-- App Header / Savings -->
+                <div class="px-6 py-4">
+                    <div class="bg-emerald-600 rounded-3xl p-6 text-white shadow-lg shadow-emerald-200">
+                        <p class="text-emerald-100 text-sm opacity-80">Good Morning!</p>
+                        <h2 id="savings-count" class="text-3xl font-bold mt-1">$14.20 <span class="text-sm font-normal opacity-70">Saved Today</span></h2>
+                        <div class="mt-4 flex items-center gap-2 bg-emerald-700 bg-opacity-30 rounded-full px-3 py-1 w-fit text-xs">
+                            <i class="fa-solid fa-bell text-yellow-400"></i>
+                            <span>2 Items expiring in 48h</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content -->
+                <div class="px-6 space-y-6">
+                    
+                    <!-- Location Selector -->
+                    <div class="flex justify-between items-center bg-slate-50 p-3 rounded-2xl border border-slate-100">
+                        <span class="text-sm font-bold text-slate-600">Pricing Region:</span>
+                        <select id="region-selector" class="bg-transparent text-sm font-bold text-emerald-600 focus:outline-none" onchange="updatePrices()">
+                            <option value="IN">🇮🇳 India (Blinkit/Zepto)</option>
+                            <option value="US">🇺🇸 Global (Amazon/Instacart)</option>
+                        </select>
+                    </div>
+
+                    <!-- Quick Action Bar -->
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="font-bold text-slate-800 text-sm">Quick Use (One-Tap Minus)</h3>
+                            <span class="text-xs text-emerald-600 font-bold cursor-pointer">Edit</span>
+                        </div>
+                        <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                            <div onclick="toast('Deducted 1 unit of Milk!')" class="min-w-[80px] bg-blue-50 border border-blue-100 p-3 rounded-2xl flex flex-col items-center gap-1 cursor-pointer transition active:scale-95">
+                                <i class="fa-solid fa-bottle-water text-blue-500 text-lg"></i>
+                                <span class="text-[10px] font-bold text-blue-800">Milk</span>
+                                <span class="text-[8px] text-blue-400">500ml</span>
+                            </div>
+                            <div onclick="toast('Deducted 1 unit of Eggs!')" class="min-w-[80px] bg-orange-50 border border-orange-100 p-3 rounded-2xl flex flex-col items-center gap-1 cursor-pointer transition active:scale-95">
+                                <i class="fa-solid fa-egg text-orange-500 text-lg"></i>
+                                <span class="text-[10px] font-bold text-orange-800">Eggs</span>
+                                <span class="text-[8px] text-orange-400">8 pcs</span>
+                            </div>
+                            <div onclick="toast('Deducted 1 unit of Bread!')" class="min-w-[80px] bg-amber-50 border border-amber-100 p-3 rounded-2xl flex flex-col items-center gap-1 cursor-pointer transition active:scale-95">
+                                <i class="fa-solid fa-bread-slice text-amber-500 text-lg"></i>
+                                <span class="text-[10px] font-bold text-amber-800">Bread</span>
+                                <span class="text-[8px] text-amber-400">12 slc</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Categories Grid -->
+                    <div>
+                        <h3 class="font-bold text-slate-800 mb-3">Your Inventory</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-orange-50 p-4 rounded-2xl flex flex-col items-center text-center cursor-pointer border border-orange-100 transition hover:scale-105">
+                                <i class="fa-solid fa-kitchen-set text-orange-500 text-2xl mb-2"></i>
+                                <span class="text-sm font-bold text-orange-700">Kitchen</span>
+                                <span class="text-xs text-orange-400">12 Items</span>
+                            </div>
+                            <div onclick="showMedicine()" class="bg-red-50 p-4 rounded-2xl flex flex-col items-center text-center cursor-pointer border border-red-100 transition hover:scale-105">
+                                <i class="fa-solid fa-pills text-red-500 text-2xl mb-2"></i>
+                                <span class="text-sm font-bold text-red-700">Pharmacy</span>
+                                <span id="pill-count" class="text-xs text-red-400">4 Pills Left</span>
+                            </div>
+                            <div class="bg-blue-50 p-4 rounded-2xl flex flex-col items-center text-center cursor-pointer border border-blue-100 transition hover:scale-105">
+                                <i class="fa-solid fa-basket-shopping text-blue-500 text-2xl mb-2"></i>
+                                <span class="text-sm font-bold text-blue-700">Groceries</span>
+                                <span class="text-xs text-blue-400">28 Items</span>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-2xl flex flex-col items-center text-center cursor-pointer border border-slate-100 transition hover:scale-105">
+                                <i class="fa-solid fa-chart-line text-slate-500 text-2xl mb-2"></i>
+                                <span class="text-sm font-bold text-slate-700">Price Audit</span>
+                                <span class="text-xs text-slate-400">3 Receipts</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Live Price Comparison -->
+                    <div id="comparison-section" class="bg-slate-50 rounded-2xl p-4 border border-slate-100">
+                        <h3 class="font-bold text-slate-800 text-sm mb-3">Live Price Comparison: <span class="text-emerald-600">Milk</span></h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center bg-white p-3 rounded-xl shadow-sm border border-slate-100">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center"><i class="fa-solid fa-shop text-xs"></i></div>
+                                    <div>
+                                        <p id="store-1-name" class="text-xs font-bold text-slate-800">Blinkit</p>
+                                        <p class="text-[10px] text-slate-400">10 Min Delivery</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p id="store-1-price" class="text-sm font-black text-slate-800">₹42.00</p>
+                                    <a href="#" class="text-[10px] text-emerald-600 font-bold hover:underline">Get Affiliate Link</a>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-between items-center bg-white p-3 rounded-xl shadow-sm border border-slate-100">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center"><i class="fa-brands fa-amazon text-xs"></i></div>
+                                    <div>
+                                        <p id="store-2-name" class="text-xs font-bold text-slate-800">Amazon Fresh</p>
+                                        <p class="text-[10px] text-slate-400">Same Day</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p id="store-2-price" class="text-sm font-black text-slate-800">₹45.00</p>
+                                    <button class="bg-emerald-600 text-white text-[10px] px-2 py-1 rounded-lg font-bold">Buy Now</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Modal / Alerts -->
+                <div id="modal-container" class="hidden absolute inset-0 bg-black bg-opacity-60 z-[100] flex items-center justify-center p-6">
+                    <div id="alert-modal" class="bg-white rounded-3xl p-6 w-full animate-pop text-center space-y-4">
+                        <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto text-2xl">
+                            <i class="fa-solid fa-circle-exclamation"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800" id="modal-title">Guardian Alert!</h3>
+                        <p class="text-slate-500 text-sm" id="modal-desc">You already have **2 bottles of Milk** at home. Do you still want to buy more?</p>
+                        <div class="flex gap-3">
+                            <button onclick="closeModal()" class="flex-1 py-3 bg-slate-100 text-slate-600 font-bold rounded-2xl">Skip Item</button>
+                            <button onclick="closeModal()" class="flex-1 py-3 bg-emerald-600 text-white font-bold rounded-2xl shadow-lg shadow-emerald-100">Buy Anyway</button>
+                        </div>
+                    </div>
+
+                    <div id="medicine-modal" class="hidden bg-white rounded-3xl p-6 w-full animate-pop text-center space-y-4">
+                        <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto text-2xl">
+                            <i class="fa-solid fa-capsules"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800">Medicine Alert</h3>
+                        <p class="text-slate-500 text-sm">You have only **4 tablets** of Blood Pressure Meds left (~2 days). We've added this to your shopping list automatically.</p>
+                        <div class="bg-blue-50 p-3 rounded-2xl text-left border border-blue-100">
+                            <p class="text-xs font-bold text-blue-800">Smart Refill Logic:</p>
+                            <p class="text-[10px] text-blue-600 mt-1">Dosage: 2/day. Counted down automatically by background worker. No manual entry needed!</p>
+                        </div>
+                        <button onclick="closeModal()" class="w-full py-3 bg-blue-600 text-white font-bold rounded-2xl shadow-lg shadow-blue-100">Got it!</button>
+                    </div>
+                </div>
+
+                <!-- Bottom Navigation -->
+                <div class="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-100 flex justify-around items-center py-4 px-6 rounded-t-3xl shadow-2xl z-50">
+                    <div class="text-emerald-600 flex flex-col items-center"><i class="fa-solid fa-home text-lg"></i><span class="text-[10px] font-bold">Home</span></div>
+                    <div class="text-slate-400 flex flex-col items-center"><i class="fa-solid fa-list-check text-lg"></i><span class="text-[10px] font-bold">List</span></div>
+                    <div class="text-slate-400 flex flex-col items-center"><i class="fa-solid fa-clock-rotate-left text-lg"></i><span class="text-[10px] font-bold">History</span></div>
+                    <div class="text-slate-400 flex flex-col items-center"><i class="fa-solid fa-user text-lg"></i><span class="text-[10px] font-bold">Profile</span></div>
+                </div>
+
+                <!-- FAB Scan -->
+                <div class="absolute bottom-16 left-1/2 -translate-x-1/2 z-[60]">
+                    <button onclick="simulateScan()" class="bg-emerald-600 text-white flex items-center gap-2 px-6 py-4 rounded-full shadow-xl shadow-emerald-200 font-bold transition hover:scale-105 active:scale-95">
+                        <i class="fa-solid fa-barcode"></i>
+                        <span>Scan Item</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function simulateScan() {
+            document.getElementById('modal-container').classList.remove('hidden');
+            document.getElementById('alert-modal').classList.remove('hidden');
+            document.getElementById('medicine-modal').classList.add('hidden');
+        }
+
+        function showMedicine() {
+            document.getElementById('modal-container').classList.remove('hidden');
+            document.getElementById('alert-modal').classList.add('hidden');
+            document.getElementById('medicine-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('modal-container').classList.add('hidden');
+        }
+
+        function toast(message) {
+            const toastEl = document.createElement('div');
+            toastEl.className = 'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-slate-800 text-white text-xs px-4 py-2 rounded-full shadow-xl z-[200] animate-pop';
+            toastEl.innerText = message;
+            document.getElementById('app-screen').appendChild(toastEl);
+            setTimeout(() => toastEl.remove(), 1500);
+        }
+
+        function updatePrices() {
+            const region = document.getElementById('region-selector').value;
+            const s1Name = document.getElementById('store-1-name');
+            const s1Price = document.getElementById('store-1-price');
+            const s2Name = document.getElementById('store-2-name');
+            const s2Price = document.getElementById('store-2-price');
+
+            if (region === 'IN') {
+                s1Name.innerText = "Blinkit";
+                s1Price.innerText = "₹42.00";
+                s2Name.innerText = "Zepto";
+                s2Price.innerText = "₹39.00";
+            } else {
+                s1Name.innerText = "Walmart";
+                s1Price.innerText = "$4.20";
+                s2Name.innerText = "Amazon Fresh";
+                s2Price.innerText = "$3.99";
+            }
+        }
+    </script>
+</body>
+</html>
