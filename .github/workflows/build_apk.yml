@@ -35,6 +35,9 @@ jobs:
           if [ ! -d "android" ]; then
             flutter create --project-name smart_pantry --org com.example .
           fi
+          # Set minSdkVersion to 21 as required by ML Kit
+          sed -i 's/minSdkVersion flutter.minSdkVersion/minSdkVersion 21/g' android/app/build.gradle
+          sed -i 's/minSdkVersion 19/minSdkVersion 21/g' android/app/build.gradle
 
       - name: Install dependencies
         run: flutter pub get

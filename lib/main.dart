@@ -101,7 +101,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             padding: EdgeInsets.all(16),
             child: Column(
               children: [
-                Text("Price Comparisons", style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text("Price Comparisons", style: TextStyle(fontWeight: FontWeight.bold)),
                 // Placeholder for Comparison List
               ],
             ),
